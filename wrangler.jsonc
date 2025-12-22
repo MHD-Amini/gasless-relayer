@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gasless-relayer",
+  "compatibility_date": "2025-12-22",
+  "pages_build_output_dir": "./dist",
+  "compatibility_flags": ["nodejs_compat"],
+  
+  // D1 Database for transaction tracking
+  "d1_databases": [
+    {
+      "binding": "RELAYER_DB",
+      "database_name": "gasless-relayer-db",
+      "database_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+    }
+  ],
+  
+  // Environment variables
+  "vars": {
+    "SUPPORTED_CHAINS": "11155111,80002,421614",
+    "MAX_GAS_LIMIT": "500000",
+    "DAILY_USER_LIMIT": "10"
+  }
+}
