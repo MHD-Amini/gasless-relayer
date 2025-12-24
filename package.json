@@ -32,17 +32,24 @@
     "db:migrate:prod": "wrangler d1 migrations apply RELAYER_DB",
     "db:reset": "rm -rf .wrangler/state/v3/d1 && npm run db:migrate:local",
     "typecheck": "tsc --noEmit",
-    "lint": "echo 'Linting passed'"
+    "lint": "echo 'Linting passed'",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "hono": "^4.11.1"
   },
   "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.11.1",
     "@cloudflare/workers-types": "^4.20251221.0",
     "@hono/vite-build": "^1.2.0",
     "@hono/vite-cloudflare-pages": "^0.4.3",
     "@hono/vite-dev-server": "^0.18.2",
     "vite": "^6.3.5",
+    "vitest": "^4.0.16",
     "wrangler": "^4.4.0"
   },
   "engines": {

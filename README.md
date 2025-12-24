@@ -6,6 +6,7 @@
 ![Hono](https://img.shields.io/badge/Hono-4.x-orange?style=for-the-badge&logo=hono)
 ![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-Tested-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
 **A production-ready EIP-2771 Meta-Transaction Relayer Service**
@@ -395,6 +396,71 @@ npx wrangler secret put RELAYER_PRIVATE_KEY
 | `npm run db:migrate:prod` | Apply migrations to production |
 | `npm run db:reset` | Reset local database |
 | `npm run deploy` | Deploy to Cloudflare Pages |
+| `npm test` | Run all tests |
+| `npm run test:unit` | Run unit tests only |
+| `npm run test:integration` | Run integration tests only |
+| `npm run test:coverage` | Run tests with coverage report |
+| `npm run test:watch` | Run tests in watch mode |
+
+---
+
+## Testing
+
+This project includes a comprehensive test suite using **Vitest** and **@cloudflare/vitest-pool-workers** for testing in the Cloudflare Workers environment.
+
+### Test Structure
+
+```
+tests/
+├── unit/
+│   ├── crypto.test.ts      # EIP-712 hashing, Keccak-256, validation
+│   └── database.test.ts    # Database operations, nonce management
+├── integration/
+│   ├── relay.test.ts       # Relay API endpoints
+│   └── admin.test.ts       # Admin API endpoints
+├── setup.ts                # Test environment setup
+└── cloudflare-test.d.ts    # Type declarations
+```
+
+### Test Categories
+
+#### Unit Tests
+- **Cryptographic Functions**: Keccak-256 hashing, EIP-712 domain separator, forward request hashing
+- **Validation**: Address validation, gas limit checks, deadline verification
+- **Database Operations**: User management, nonce tracking, transaction CRUD, circuit breaker
+
+#### Integration Tests
+- **Relay API**: Transaction submission, status checking, nonce retrieval, typed data generation
+- **Admin API**: Health checks, statistics, circuit breaker management, whitelist operations
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run only unit tests
+npm run test:unit
+
+# Run only integration tests
+npm run test:integration
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests in watch mode (development)
+npm run test:watch
+```
+
+### Test Coverage
+
+The test suite covers:
+- ✅ **90+ test cases** across unit and integration tests
+- ✅ **EIP-712 signature utilities** (domain separator, struct hashing)
+- ✅ **All API endpoints** with success and error scenarios
+- ✅ **Database operations** with D1 SQLite
+- ✅ **Security features** (rate limiting, circuit breaker, whitelisting)
+- ✅ **Multi-chain support** validation
 
 ---
 
