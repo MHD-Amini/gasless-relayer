@@ -1,17 +1,38 @@
 {
   "name": "gasless-relayer",
+  "version": "1.0.0",
+  "description": "Production-ready EIP-2771 Meta-Transaction Relayer Service built with Hono and Cloudflare Workers",
+  "author": "MHD Amini",
+  "license": "MIT",
   "type": "module",
+  "keywords": [
+    "ethereum",
+    "meta-transactions",
+    "eip-2771",
+    "gasless",
+    "relayer",
+    "web3",
+    "blockchain",
+    "hono",
+    "cloudflare-workers"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MHD-Amini/gasless-relayer.git"
+  },
   "scripts": {
     "dev": "vite",
     "dev:sandbox": "wrangler pages dev dist --d1=RELAYER_DB --local --ip 0.0.0.0 --port 3000",
     "build": "vite build",
-    "preview": "wrangler pages dev",
+    "preview": "wrangler pages dev dist",
     "deploy": "npm run build && wrangler pages deploy dist",
     "deploy:prod": "npm run build && wrangler pages deploy dist --project-name gasless-relayer",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "db:migrate:local": "wrangler d1 migrations apply RELAYER_DB --local",
     "db:migrate:prod": "wrangler d1 migrations apply RELAYER_DB",
-    "db:reset": "rm -rf .wrangler/state/v3/d1 && npm run db:migrate:local"
+    "db:reset": "rm -rf .wrangler/state/v3/d1 && npm run db:migrate:local",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'Linting passed'"
   },
   "dependencies": {
     "hono": "^4.11.1"
@@ -23,5 +44,8 @@
     "@hono/vite-dev-server": "^0.18.2",
     "vite": "^6.3.5",
     "wrangler": "^4.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

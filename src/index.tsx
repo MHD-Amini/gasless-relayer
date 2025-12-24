@@ -30,7 +30,7 @@ app.get('/api/health', (c) => {
   return c.json({ status: 'ok', timestamp: Date.now() });
 });
 
-// Dashboard HTML
+// Dashboard HTML - Light Theme
 app.get('/', (c) => {
   return c.html(`<!DOCTYPE html>
 <html lang="en">
@@ -38,6 +38,15 @@ app.get('/', (c) => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gasless Relayer - EIP-2771 Meta-Transaction Service</title>
+    <meta name="description" content="Production-ready EIP-2771 compliant meta-transaction relayer service. Enable gasless transactions for your dApp users.">
+    <meta name="keywords" content="EIP-2771, meta-transactions, gasless, ethereum, web3, blockchain, relayer">
+    <meta name="author" content="MHD Amini">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Gasless Relayer - EIP-2771 Meta-Transaction Service">
+    <meta property="og:description" content="Production-ready meta-transaction relayer for gasless blockchain interactions">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -46,38 +55,91 @@ app.get('/', (c) => {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         .animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
-        .status-pending { color: #fbbf24; }
-        .status-confirmed { color: #34d399; }
-        .status-failed { color: #f87171; }
-        .status-queued { color: #60a5fa; }
-        code { font-family: 'Monaco', 'Menlo', monospace; }
-        .tab-active { border-bottom: 2px solid #8b5cf6; color: #8b5cf6; }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .gradient-bg { 
+            background: linear-gradient(-45deg, #667eea, #764ba2, #6B8DD6, #8E37D7);
+            background-size: 400% 400%;
+            animation: gradient-shift 15s ease infinite;
+        }
+        .glass { 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(229, 231, 235, 0.8);
+        }
+        .status-pending { color: #f59e0b; }
+        .status-confirmed { color: #10b981; }
+        .status-failed { color: #ef4444; }
+        .status-queued { color: #3b82f6; }
+        .status-submitted { color: #8b5cf6; }
+        code { font-family: 'SF Mono', 'Monaco', 'Menlo', monospace; }
+        .tab-active { 
+            border-bottom: 3px solid #7c3aed; 
+            color: #7c3aed;
+            font-weight: 600;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -15px rgba(124, 58, 237, 0.2);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(124, 58, 237, 0.4);
+        }
+        .stat-icon {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        /* Table styles */
+        .table-row-hover:hover { background: rgba(124, 58, 237, 0.04); }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen">
+<body class="bg-gradient-to-br from-slate-50 via-white to-purple-50 text-gray-800 min-h-screen">
     <!-- Header -->
-    <header class="gradient-bg py-6 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4">
+    <header class="gradient-bg py-5 shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-                        <i class="fas fa-gas-pump text-2xl text-purple-600"></i>
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg animate-float">
+                        <i class="fas fa-gas-pump text-2xl bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"></i>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold">Gasless Relayer</h1>
-                        <p class="text-purple-200 text-sm">EIP-2771 Meta-Transaction Service</p>
+                        <h1 class="text-2xl font-bold text-white tracking-tight">Gasless Relayer</h1>
+                        <p class="text-purple-100 text-sm font-medium">EIP-2771 Meta-Transaction Service</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <div id="health-indicator" class="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
-                        <span class="w-3 h-3 bg-green-400 rounded-full animate-pulse-dot"></span>
-                        <span class="text-sm">System Healthy</span>
+                    <div id="health-indicator" class="hidden sm:flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-lg backdrop-blur-sm">
+                        <span class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse-dot shadow-lg shadow-emerald-400/50"></span>
+                        <span class="text-sm text-white font-medium">System Healthy</span>
                     </div>
-                    <button onclick="connectWallet()" id="wallet-btn" class="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-purple-50 transition">
-                        <i class="fas fa-wallet mr-2"></i>Connect Wallet
+                    <button onclick="connectWallet()" id="wallet-btn" class="bg-white text-purple-600 px-5 py-2.5 rounded-xl font-semibold hover:bg-purple-50 transition shadow-lg hover:shadow-xl">
+                        <i class="fas fa-wallet mr-2"></i><span class="hidden sm:inline">Connect</span> Wallet
                     </button>
                 </div>
             </div>
@@ -85,120 +147,127 @@ app.get('/', (c) => {
     </header>
 
     <!-- Navigation Tabs -->
-    <nav class="bg-gray-800 border-b border-gray-700">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex space-x-8">
-                <button onclick="showTab('dashboard')" id="tab-dashboard" class="py-4 px-2 text-sm font-medium tab-active">
-                    <i class="fas fa-chart-line mr-2"></i>Dashboard
+    <nav class="bg-white border-b border-gray-100 shadow-sm sticky top-[76px] z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex space-x-1 sm:space-x-6 overflow-x-auto scrollbar-hide">
+                <button onclick="showTab('dashboard')" id="tab-dashboard" class="py-4 px-3 text-sm font-medium tab-active whitespace-nowrap transition-all">
+                    <i class="fas fa-chart-line mr-2"></i><span class="hidden sm:inline">Dashboard</span>
                 </button>
-                <button onclick="showTab('submit')" id="tab-submit" class="py-4 px-2 text-sm font-medium text-gray-400 hover:text-white">
-                    <i class="fas fa-paper-plane mr-2"></i>Submit Transaction
+                <button onclick="showTab('submit')" id="tab-submit" class="py-4 px-3 text-sm font-medium text-gray-500 hover:text-purple-600 whitespace-nowrap transition-all">
+                    <i class="fas fa-paper-plane mr-2"></i><span class="hidden sm:inline">Submit</span> Tx
                 </button>
-                <button onclick="showTab('history')" id="tab-history" class="py-4 px-2 text-sm font-medium text-gray-400 hover:text-white">
-                    <i class="fas fa-history mr-2"></i>History
+                <button onclick="showTab('history')" id="tab-history" class="py-4 px-3 text-sm font-medium text-gray-500 hover:text-purple-600 whitespace-nowrap transition-all">
+                    <i class="fas fa-history mr-2"></i><span class="hidden sm:inline">History</span>
                 </button>
-                <button onclick="showTab('docs')" id="tab-docs" class="py-4 px-2 text-sm font-medium text-gray-400 hover:text-white">
-                    <i class="fas fa-book mr-2"></i>API Docs
+                <button onclick="showTab('docs')" id="tab-docs" class="py-4 px-3 text-sm font-medium text-gray-500 hover:text-purple-600 whitespace-nowrap transition-all">
+                    <i class="fas fa-book mr-2"></i><span class="hidden sm:inline">API</span> Docs
                 </button>
-                <button onclick="showTab('contracts')" id="tab-contracts" class="py-4 px-2 text-sm font-medium text-gray-400 hover:text-white">
-                    <i class="fas fa-file-contract mr-2"></i>Contracts
+                <button onclick="showTab('contracts')" id="tab-contracts" class="py-4 px-3 text-sm font-medium text-gray-500 hover:text-purple-600 whitespace-nowrap transition-all">
+                    <i class="fas fa-file-contract mr-2"></i><span class="hidden sm:inline">Contracts</span>
                 </button>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 py-8">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Dashboard Tab -->
         <div id="content-dashboard" class="tab-content">
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+                <div class="glass-card rounded-2xl p-5 sm:p-6 card-hover">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-400 text-sm">Total Transactions</p>
-                            <p id="stat-total" class="text-3xl font-bold mt-1">-</p>
+                            <p class="text-gray-500 text-xs sm:text-sm font-medium uppercase tracking-wide">Total Transactions</p>
+                            <p id="stat-total" class="text-2xl sm:text-3xl font-bold mt-1 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">-</p>
                         </div>
-                        <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-exchange-alt text-purple-400 text-xl"></i>
+                        <div class="w-12 h-12 stat-icon rounded-xl flex items-center justify-center">
+                            <i class="fas fa-exchange-alt text-purple-500 text-xl"></i>
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                <div class="glass-card rounded-2xl p-5 sm:p-6 card-hover">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-400 text-sm">Active Users</p>
-                            <p id="stat-users" class="text-3xl font-bold mt-1">-</p>
+                            <p class="text-gray-500 text-xs sm:text-sm font-medium uppercase tracking-wide">Active Users</p>
+                            <p id="stat-users" class="text-2xl sm:text-3xl font-bold mt-1 bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">-</p>
                         </div>
-                        <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-users text-blue-400 text-xl"></i>
+                        <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-users text-blue-500 text-xl"></i>
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                <div class="glass-card rounded-2xl p-5 sm:p-6 card-hover">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-400 text-sm">Gas Relayed</p>
-                            <p id="stat-gas" class="text-3xl font-bold mt-1">-</p>
+                            <p class="text-gray-500 text-xs sm:text-sm font-medium uppercase tracking-wide">Gas Relayed</p>
+                            <p id="stat-gas" class="text-2xl sm:text-3xl font-bold mt-1 bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">-</p>
                         </div>
-                        <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-gas-pump text-green-400 text-xl"></i>
+                        <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-gas-pump text-emerald-500 text-xl"></i>
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                <div class="glass-card rounded-2xl p-5 sm:p-6 card-hover">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-400 text-sm">Circuit Breaker</p>
-                            <p id="stat-circuit" class="text-xl font-bold mt-1 text-green-400">Closed</p>
+                            <p class="text-gray-500 text-xs sm:text-sm font-medium uppercase tracking-wide">Circuit Breaker</p>
+                            <p id="stat-circuit" class="text-xl sm:text-2xl font-bold mt-1 text-emerald-500">Closed</p>
                         </div>
-                        <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-shield-alt text-yellow-400 text-xl"></i>
+                        <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-amber-500 text-xl"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Charts and Activity -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8">
                 <!-- Chain Distribution -->
-                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
-                    <h3 class="text-lg font-semibold mb-4">
-                        <i class="fas fa-link mr-2 text-purple-400"></i>Chain Distribution
+                <div class="glass-card rounded-2xl p-6 card-hover">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-link mr-2 text-purple-500"></i>Chain Distribution
                     </h3>
-                    <canvas id="chainChart" height="200"></canvas>
+                    <div class="h-64">
+                        <canvas id="chainChart"></canvas>
+                    </div>
                 </div>
 
                 <!-- Status Distribution -->
-                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
-                    <h3 class="text-lg font-semibold mb-4">
-                        <i class="fas fa-chart-pie mr-2 text-purple-400"></i>Transaction Status
+                <div class="glass-card rounded-2xl p-6 card-hover">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-chart-pie mr-2 text-purple-500"></i>Transaction Status
                     </h3>
-                    <canvas id="statusChart" height="200"></canvas>
+                    <div class="h-64">
+                        <canvas id="statusChart"></canvas>
+                    </div>
                 </div>
             </div>
 
             <!-- Recent Activity -->
-            <div class="mt-8 bg-gray-800 rounded-xl border border-gray-700">
-                <div class="p-6 border-b border-gray-700">
-                    <h3 class="text-lg font-semibold">
-                        <i class="fas fa-stream mr-2 text-purple-400"></i>Recent Activity
+            <div class="glass-card rounded-2xl overflow-hidden card-hover">
+                <div class="p-6 border-b border-gray-100">
+                    <h3 class="text-lg font-semibold flex items-center">
+                        <i class="fas fa-stream mr-2 text-purple-500"></i>Recent Activity
                     </h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
-                        <thead class="bg-gray-900">
+                        <thead class="bg-gray-50/80">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">ID</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">User</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Chain</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">To</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Time</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">User</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Chain</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">To</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Time</th>
                             </tr>
                         </thead>
-                        <tbody id="activity-table" class="divide-y divide-gray-700">
-                            <tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">Loading...</td></tr>
+                        <tbody id="activity-table" class="divide-y divide-gray-100">
+                            <tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">
+                                <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                                <p>Loading transactions...</p>
+                            </td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -208,16 +277,16 @@ app.get('/', (c) => {
         <!-- Submit Transaction Tab -->
         <div id="content-submit" class="tab-content hidden">
             <div class="max-w-2xl mx-auto">
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-8">
-                    <h2 class="text-2xl font-bold mb-6">
-                        <i class="fas fa-paper-plane mr-3 text-purple-400"></i>Submit Meta-Transaction
+                <div class="glass-card rounded-2xl p-6 sm:p-8 card-hover">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-paper-plane mr-3 text-purple-500"></i>Submit Meta-Transaction
                     </h2>
                     
                     <div class="space-y-6">
                         <!-- Chain Selection -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Chain</label>
-                            <select id="chain-select" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Network</label>
+                            <select id="chain-select" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
                                 <option value="11155111">Sepolia Testnet</option>
                                 <option value="80002">Polygon Amoy Testnet</option>
                                 <option value="421614">Arbitrum Sepolia Testnet</option>
@@ -226,57 +295,57 @@ app.get('/', (c) => {
 
                         <!-- To Address -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">To Address</label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Target Contract Address</label>
                             <input type="text" id="to-address" placeholder="0x..." 
-                                class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition font-mono text-sm">
                         </div>
 
                         <!-- Data -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Data (hex)</label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Calldata (hex)</label>
                             <textarea id="tx-data" rows="3" placeholder="0x..."
-                                class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"></textarea>
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm transition"></textarea>
                         </div>
 
                         <!-- Gas Limit -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Gas Limit</label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Gas Limit</label>
                             <input type="number" id="gas-limit" value="100000"
-                                class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
                         </div>
 
                         <!-- Deadline -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Deadline (minutes from now)</label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Deadline (minutes from now)</label>
                             <input type="number" id="deadline-minutes" value="30"
-                                class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
                         </div>
 
                         <!-- User Info -->
-                        <div class="bg-gray-900 rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-gray-400">Your Address:</span>
-                                <span id="user-address" class="font-mono text-sm">Not connected</span>
+                        <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-4 border border-purple-100">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-gray-600 text-sm font-medium">Your Address</span>
+                                <span id="user-address" class="font-mono text-sm text-gray-800">Not connected</span>
                             </div>
                             <div class="flex items-center justify-between">
-                                <span class="text-gray-400">Current Nonce:</span>
-                                <span id="user-nonce" class="font-mono">-</span>
+                                <span class="text-gray-600 text-sm font-medium">Current Nonce</span>
+                                <span id="user-nonce" class="font-mono text-sm font-semibold text-purple-600">-</span>
                             </div>
                         </div>
 
                         <!-- Actions -->
-                        <div class="flex space-x-4">
-                            <button onclick="simulateTransaction()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-3 rounded-lg font-semibold transition">
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button onclick="simulateTransaction()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3.5 rounded-xl font-semibold transition">
                                 <i class="fas fa-flask mr-2"></i>Simulate
                             </button>
-                            <button onclick="submitTransaction()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-semibold transition">
-                                <i class="fas fa-paper-plane mr-2"></i>Submit
+                            <button onclick="submitTransaction()" class="flex-1 btn-primary text-white py-3.5 rounded-xl font-semibold">
+                                <i class="fas fa-paper-plane mr-2"></i>Submit Transaction
                             </button>
                         </div>
 
                         <!-- Result -->
-                        <div id="submit-result" class="hidden bg-gray-900 rounded-lg p-4">
-                            <pre class="text-sm overflow-x-auto"></pre>
+                        <div id="submit-result" class="hidden rounded-xl p-4 border">
+                            <pre class="text-sm overflow-x-auto whitespace-pre-wrap"></pre>
                         </div>
                     </div>
                 </div>
@@ -285,30 +354,33 @@ app.get('/', (c) => {
 
         <!-- History Tab -->
         <div id="content-history" class="tab-content hidden">
-            <div class="bg-gray-800 rounded-xl border border-gray-700">
-                <div class="p-6 border-b border-gray-700 flex items-center justify-between">
-                    <h3 class="text-lg font-semibold">
-                        <i class="fas fa-history mr-2 text-purple-400"></i>Transaction History
+            <div class="glass-card rounded-2xl overflow-hidden card-hover">
+                <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <h3 class="text-lg font-semibold flex items-center">
+                        <i class="fas fa-history mr-2 text-purple-500"></i>Transaction History
                     </h3>
-                    <button onclick="loadHistory()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg text-sm">
+                    <button onclick="loadHistory()" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition">
                         <i class="fas fa-sync mr-2"></i>Refresh
                     </button>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
-                        <thead class="bg-gray-900">
+                        <thead class="bg-gray-50/80">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">ID</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Chain</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">To</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Gas Used</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Tx Hash</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Time</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Chain</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">To</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Gas Used</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tx Hash</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Time</th>
                             </tr>
                         </thead>
-                        <tbody id="history-table" class="divide-y divide-gray-700">
-                            <tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">Connect wallet to view history</td></tr>
+                        <tbody id="history-table" class="divide-y divide-gray-100">
+                            <tr><td colspan="7" class="px-6 py-8 text-center text-gray-400">
+                                <i class="fas fa-wallet text-3xl mb-2"></i>
+                                <p>Connect wallet to view history</p>
+                            </td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -318,22 +390,22 @@ app.get('/', (c) => {
         <!-- API Docs Tab -->
         <div id="content-docs" class="tab-content hidden">
             <div class="space-y-8">
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-8">
-                    <h2 class="text-2xl font-bold mb-6">
-                        <i class="fas fa-book mr-3 text-purple-400"></i>API Documentation
+                <div class="glass-card rounded-2xl p-6 sm:p-8 card-hover">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-book mr-3 text-purple-500"></i>API Documentation
                     </h2>
                     
-                    <div class="space-y-8">
+                    <div class="space-y-6">
                         <!-- Submit Endpoint -->
-                        <div class="border border-gray-700 rounded-lg overflow-hidden">
-                            <div class="bg-gray-900 px-4 py-3 flex items-center space-x-3">
-                                <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">POST</span>
-                                <code class="text-purple-400">/api/relay/submit</code>
+                        <div class="border border-gray-200 rounded-xl overflow-hidden">
+                            <div class="bg-gray-50 px-4 py-3 flex items-center space-x-3">
+                                <span class="bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded-md">POST</span>
+                                <code class="text-purple-600 font-semibold">/api/relay/submit</code>
                             </div>
                             <div class="p-4">
-                                <p class="text-gray-300 mb-4">Submit a signed meta-transaction for relay.</p>
-                                <h4 class="font-semibold mb-2">Request Body:</h4>
-                                <pre class="bg-gray-900 p-4 rounded-lg overflow-x-auto text-sm"><code>{
+                                <p class="text-gray-600 mb-4">Submit a signed meta-transaction for relay.</p>
+                                <h4 class="font-semibold mb-2 text-gray-800">Request Body:</h4>
+                                <pre class="bg-gray-50 p-4 rounded-lg overflow-x-auto text-sm border border-gray-200"><code class="text-gray-700">{
   "chainId": 11155111,
   "request": {
     "from": "0xUserAddress...",
@@ -350,95 +422,95 @@ app.get('/', (c) => {
                         </div>
 
                         <!-- Status Endpoint -->
-                        <div class="border border-gray-700 rounded-lg overflow-hidden">
-                            <div class="bg-gray-900 px-4 py-3 flex items-center space-x-3">
-                                <span class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">GET</span>
-                                <code class="text-purple-400">/api/relay/status/:id</code>
+                        <div class="border border-gray-200 rounded-xl overflow-hidden">
+                            <div class="bg-gray-50 px-4 py-3 flex items-center space-x-3">
+                                <span class="bg-blue-500 text-white text-xs font-bold px-2.5 py-1 rounded-md">GET</span>
+                                <code class="text-purple-600 font-semibold">/api/relay/status/:id</code>
                             </div>
                             <div class="p-4">
-                                <p class="text-gray-300">Get the status of a submitted transaction.</p>
+                                <p class="text-gray-600">Get the status of a submitted transaction.</p>
                             </div>
                         </div>
 
                         <!-- Nonce Endpoint -->
-                        <div class="border border-gray-700 rounded-lg overflow-hidden">
-                            <div class="bg-gray-900 px-4 py-3 flex items-center space-x-3">
-                                <span class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">GET</span>
-                                <code class="text-purple-400">/api/relay/nonce/:address/:chainId</code>
+                        <div class="border border-gray-200 rounded-xl overflow-hidden">
+                            <div class="bg-gray-50 px-4 py-3 flex items-center space-x-3">
+                                <span class="bg-blue-500 text-white text-xs font-bold px-2.5 py-1 rounded-md">GET</span>
+                                <code class="text-purple-600 font-semibold">/api/relay/nonce/:address/:chainId</code>
                             </div>
                             <div class="p-4">
-                                <p class="text-gray-300">Get the next available nonce for a user on a specific chain.</p>
+                                <p class="text-gray-600">Get the next available nonce for a user on a specific chain.</p>
                             </div>
                         </div>
 
                         <!-- Chains Endpoint -->
-                        <div class="border border-gray-700 rounded-lg overflow-hidden">
-                            <div class="bg-gray-900 px-4 py-3 flex items-center space-x-3">
-                                <span class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">GET</span>
-                                <code class="text-purple-400">/api/relay/chains</code>
+                        <div class="border border-gray-200 rounded-xl overflow-hidden">
+                            <div class="bg-gray-50 px-4 py-3 flex items-center space-x-3">
+                                <span class="bg-blue-500 text-white text-xs font-bold px-2.5 py-1 rounded-md">GET</span>
+                                <code class="text-purple-600 font-semibold">/api/relay/chains</code>
                             </div>
                             <div class="p-4">
-                                <p class="text-gray-300">Get list of supported chains and their configurations.</p>
+                                <p class="text-gray-600">Get list of supported chains and their configurations.</p>
                             </div>
                         </div>
 
                         <!-- Typed Data Endpoint -->
-                        <div class="border border-gray-700 rounded-lg overflow-hidden">
-                            <div class="bg-gray-900 px-4 py-3 flex items-center space-x-3">
-                                <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">POST</span>
-                                <code class="text-purple-400">/api/relay/typed-data</code>
+                        <div class="border border-gray-200 rounded-xl overflow-hidden">
+                            <div class="bg-gray-50 px-4 py-3 flex items-center space-x-3">
+                                <span class="bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded-md">POST</span>
+                                <code class="text-purple-600 font-semibold">/api/relay/typed-data</code>
                             </div>
                             <div class="p-4">
-                                <p class="text-gray-300">Generate EIP-712 typed data structure for signing.</p>
+                                <p class="text-gray-600">Generate EIP-712 typed data structure for signing.</p>
                             </div>
                         </div>
 
                         <!-- Admin Stats Endpoint -->
-                        <div class="border border-gray-700 rounded-lg overflow-hidden">
-                            <div class="bg-gray-900 px-4 py-3 flex items-center space-x-3">
-                                <span class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">GET</span>
-                                <code class="text-purple-400">/api/admin/stats</code>
+                        <div class="border border-gray-200 rounded-xl overflow-hidden">
+                            <div class="bg-gray-50 px-4 py-3 flex items-center space-x-3">
+                                <span class="bg-blue-500 text-white text-xs font-bold px-2.5 py-1 rounded-md">GET</span>
+                                <code class="text-purple-600 font-semibold">/api/admin/stats</code>
                             </div>
                             <div class="p-4">
-                                <p class="text-gray-300">Get overall relayer statistics and metrics.</p>
+                                <p class="text-gray-600">Get overall relayer statistics and metrics.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- EIP-2771 Flow -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-8">
-                    <h3 class="text-xl font-bold mb-6">
-                        <i class="fas fa-project-diagram mr-3 text-purple-400"></i>EIP-2771 Flow
+                <div class="glass-card rounded-2xl p-6 sm:p-8 card-hover">
+                    <h3 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-project-diagram mr-3 text-purple-500"></i>EIP-2771 Flow
                     </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div class="text-center">
-                            <div class="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <i class="fas fa-user text-2xl text-purple-400"></i>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                        <div class="text-center p-4">
+                            <div class="w-16 h-16 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+                                <i class="fas fa-user text-2xl text-purple-500"></i>
                             </div>
-                            <h4 class="font-semibold mb-1">1. User Signs</h4>
-                            <p class="text-sm text-gray-400">Signs EIP-712 message off-chain</p>
+                            <h4 class="font-semibold mb-1 text-gray-800">1. User Signs</h4>
+                            <p class="text-xs text-gray-500">Signs EIP-712 message off-chain</p>
                         </div>
-                        <div class="text-center">
-                            <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <i class="fas fa-server text-2xl text-blue-400"></i>
+                        <div class="text-center p-4">
+                            <div class="w-16 h-16 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+                                <i class="fas fa-server text-2xl text-blue-500"></i>
                             </div>
-                            <h4 class="font-semibold mb-1">2. Relayer Receives</h4>
-                            <p class="text-sm text-gray-400">Validates & submits on-chain</p>
+                            <h4 class="font-semibold mb-1 text-gray-800">2. Relayer Receives</h4>
+                            <p class="text-xs text-gray-500">Validates & submits on-chain</p>
                         </div>
-                        <div class="text-center">
-                            <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <i class="fas fa-check-double text-2xl text-green-400"></i>
+                        <div class="text-center p-4">
+                            <div class="w-16 h-16 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+                                <i class="fas fa-check-double text-2xl text-emerald-500"></i>
                             </div>
-                            <h4 class="font-semibold mb-1">3. Forwarder Verifies</h4>
-                            <p class="text-sm text-gray-400">Checks signature & nonce</p>
+                            <h4 class="font-semibold mb-1 text-gray-800">3. Forwarder Verifies</h4>
+                            <p class="text-xs text-gray-500">Checks signature & nonce</p>
                         </div>
-                        <div class="text-center">
-                            <div class="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <i class="fas fa-cog text-2xl text-yellow-400"></i>
+                        <div class="text-center p-4">
+                            <div class="w-16 h-16 bg-gradient-to-br from-amber-100 to-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+                                <i class="fas fa-cog text-2xl text-amber-500"></i>
                             </div>
-                            <h4 class="font-semibold mb-1">4. Contract Executes</h4>
-                            <p class="text-sm text-gray-400">Runs with original sender</p>
+                            <h4 class="font-semibold mb-1 text-gray-800">4. Contract Executes</h4>
+                            <p class="text-xs text-gray-500">Runs with original sender</p>
                         </div>
                     </div>
                 </div>
@@ -449,15 +521,15 @@ app.get('/', (c) => {
         <div id="content-contracts" class="tab-content hidden">
             <div class="space-y-8">
                 <!-- Forwarder Contract -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-8">
-                    <h2 class="text-2xl font-bold mb-6">
-                        <i class="fas fa-file-contract mr-3 text-purple-400"></i>Trusted Forwarder Contract
+                <div class="glass-card rounded-2xl p-6 sm:p-8 card-hover">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-file-contract mr-3 text-purple-500"></i>Trusted Forwarder Contract
                     </h2>
-                    <p class="text-gray-300 mb-4">
+                    <p class="text-gray-600 mb-6">
                         The Trusted Forwarder contract verifies signatures and forwards calls to recipient contracts.
                         It follows the EIP-2771 standard for meta-transactions.
                     </p>
-                    <pre class="bg-gray-900 p-4 rounded-lg overflow-x-auto text-sm"><code class="language-solidity">// SPDX-License-Identifier: MIT
+                    <pre class="bg-gray-50 p-4 rounded-xl overflow-x-auto text-sm border border-gray-200"><code class="text-gray-700">// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/metatx/MinimalForwarder.sol";
@@ -468,15 +540,15 @@ contract GaslessForwarder is MinimalForwarder {
                 </div>
 
                 <!-- Recipient Contract -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-8">
-                    <h2 class="text-xl font-bold mb-6">
-                        <i class="fas fa-cube mr-3 text-purple-400"></i>ERC2771 Recipient Contract
+                <div class="glass-card rounded-2xl p-6 sm:p-8 card-hover">
+                    <h2 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-cube mr-3 text-purple-500"></i>ERC2771 Recipient Contract
                     </h2>
-                    <p class="text-gray-300 mb-4">
+                    <p class="text-gray-600 mb-6">
                         Your dApp contracts should inherit from ERC2771Context to recognize the trusted forwarder
                         and extract the original sender address.
                     </p>
-                    <pre class="bg-gray-900 p-4 rounded-lg overflow-x-auto text-sm"><code class="language-solidity">// SPDX-License-Identifier: MIT
+                    <pre class="bg-gray-50 p-4 rounded-xl overflow-x-auto text-sm border border-gray-200"><code class="text-gray-700">// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/metatx/ERC2771Context.sol";
@@ -508,20 +580,20 @@ contract MyGaslessApp is ERC2771Context {
                 </div>
 
                 <!-- Deployment Guide -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-8">
-                    <h2 class="text-xl font-bold mb-6">
-                        <i class="fas fa-rocket mr-3 text-purple-400"></i>Deployment Guide
+                <div class="glass-card rounded-2xl p-6 sm:p-8 card-hover">
+                    <h2 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-rocket mr-3 text-purple-500"></i>Deployment Guide
                     </h2>
-                    <ol class="list-decimal list-inside space-y-3 text-gray-300">
+                    <ol class="list-decimal list-inside space-y-3 text-gray-600">
                         <li>Deploy the GaslessForwarder contract to your target chain</li>
                         <li>Copy the forwarder address</li>
                         <li>Deploy your ERC2771Context contract with the forwarder address</li>
                         <li>Update the CHAIN_CONFIGS in the relayer with your forwarder address</li>
                         <li>Add your recipient contract to the whitelist (optional but recommended)</li>
                     </ol>
-                    <div class="mt-6 bg-gray-900 rounded-lg p-4">
-                        <h4 class="font-semibold mb-2">Quick Deploy with Hardhat:</h4>
-                        <pre class="text-sm overflow-x-auto"><code>npx hardhat run scripts/deploy.js --network sepolia</code></pre>
+                    <div class="mt-6 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-4 border border-purple-100">
+                        <h4 class="font-semibold mb-2 text-gray-800">Quick Deploy with Hardhat:</h4>
+                        <pre class="text-sm overflow-x-auto"><code class="text-purple-700">npx hardhat run scripts/deploy.js --network sepolia</code></pre>
                     </div>
                 </div>
             </div>
@@ -529,18 +601,27 @@ contract MyGaslessApp is ERC2771Context {
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 border-t border-gray-700 py-6 mt-12">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex items-center justify-between">
-                <p class="text-gray-400 text-sm">
-                    <i class="fas fa-code mr-2"></i>
-                    Gasless Relayer - EIP-2771 Meta-Transaction Service
-                </p>
-                <div class="flex items-center space-x-4 text-gray-400 text-sm">
-                    <span><i class="fas fa-shield-alt mr-1"></i> Secure</span>
-                    <span><i class="fas fa-bolt mr-1"></i> Fast</span>
-                    <span><i class="fas fa-link mr-1"></i> Multi-Chain</span>
+    <footer class="bg-white border-t border-gray-100 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-gas-pump text-white text-sm"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm">
+                        <span class="font-semibold text-gray-800">Gasless Relayer</span> - EIP-2771 Meta-Transaction Service
+                    </p>
                 </div>
+                <div class="flex items-center space-x-6 text-gray-500 text-sm">
+                    <span class="flex items-center"><i class="fas fa-shield-alt mr-1.5 text-emerald-500"></i> Secure</span>
+                    <span class="flex items-center"><i class="fas fa-bolt mr-1.5 text-amber-500"></i> Fast</span>
+                    <span class="flex items-center"><i class="fas fa-link mr-1.5 text-blue-500"></i> Multi-Chain</span>
+                </div>
+            </div>
+            <div class="mt-6 pt-6 border-t border-gray-100 text-center">
+                <p class="text-gray-400 text-xs">
+                    Built with <i class="fas fa-heart text-red-400 mx-1"></i> using Hono + Cloudflare Workers
+                </p>
             </div>
         </div>
     </footer>
@@ -565,14 +646,14 @@ contract MyGaslessApp is ERC2771Context {
             // Remove active from all tabs
             document.querySelectorAll('[id^="tab-"]').forEach(el => {
                 el.classList.remove('tab-active');
-                el.classList.add('text-gray-400');
+                el.classList.add('text-gray-500');
             });
             // Show selected content
             document.getElementById('content-' + tabName).classList.remove('hidden');
             // Activate selected tab
             const tab = document.getElementById('tab-' + tabName);
             tab.classList.add('tab-active');
-            tab.classList.remove('text-gray-400');
+            tab.classList.remove('text-gray-500');
         }
 
         // Connect wallet
@@ -591,9 +672,9 @@ contract MyGaslessApp is ERC2771Context {
                     '<i class="fas fa-check-circle mr-2"></i>' + 
                     userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
                 document.getElementById('wallet-btn').classList.remove('bg-white', 'text-purple-600');
-                document.getElementById('wallet-btn').classList.add('bg-green-500', 'text-white');
+                document.getElementById('wallet-btn').classList.add('bg-emerald-500', 'text-white');
                 
-                document.getElementById('user-address').textContent = userAddress;
+                document.getElementById('user-address').textContent = userAddress.slice(0, 8) + '...' + userAddress.slice(-6);
                 
                 // Load nonce
                 await loadUserNonce();
@@ -639,12 +720,12 @@ contract MyGaslessApp is ERC2771Context {
                     const circuitEl = document.getElementById('stat-circuit');
                     if (stats.circuitBreaker.isOpen) {
                         circuitEl.textContent = 'OPEN';
-                        circuitEl.classList.remove('text-green-400');
-                        circuitEl.classList.add('text-red-400');
+                        circuitEl.classList.remove('text-emerald-500');
+                        circuitEl.classList.add('text-red-500');
                     } else {
                         circuitEl.textContent = 'Closed';
-                        circuitEl.classList.remove('text-red-400');
-                        circuitEl.classList.add('text-green-400');
+                        circuitEl.classList.remove('text-red-500');
+                        circuitEl.classList.add('text-emerald-500');
                     }
                     
                     // Update charts
@@ -657,6 +738,10 @@ contract MyGaslessApp is ERC2771Context {
 
         // Update charts
         function updateCharts(stats) {
+            // Chart.js default styling for light theme
+            Chart.defaults.color = '#6b7280';
+            Chart.defaults.borderColor = '#e5e7eb';
+            
             // Chain distribution chart
             const chainLabels = Object.keys(stats.byChain);
             const chainData = Object.values(stats.byChain);
@@ -675,14 +760,16 @@ contract MyGaslessApp is ERC2771Context {
                             label: 'Transactions',
                             data: chainData.length ? chainData : [0],
                             backgroundColor: ['#8b5cf6', '#3b82f6', '#10b981'],
-                            borderRadius: 8
+                            borderRadius: 8,
+                            borderSkipped: false
                         }]
                     },
                     options: {
                         responsive: true,
+                        maintainAspectRatio: false,
                         plugins: { legend: { display: false } },
                         scales: {
-                            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' } },
+                            y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
                             x: { grid: { display: false } }
                         }
                     }
@@ -705,15 +792,18 @@ contract MyGaslessApp is ERC2771Context {
                         labels: statusLabels.length ? statusLabels : ['No data'],
                         datasets: [{
                             data: statusData.length ? statusData : [1],
-                            backgroundColor: ['#fbbf24', '#34d399', '#f87171', '#60a5fa', '#a78bfa'],
-                            borderWidth: 0
+                            backgroundColor: ['#f59e0b', '#10b981', '#ef4444', '#3b82f6', '#8b5cf6'],
+                            borderWidth: 0,
+                            hoverOffset: 4
                         }]
                     },
                     options: {
                         responsive: true,
+                        maintainAspectRatio: false,
                         plugins: {
-                            legend: { position: 'right', labels: { color: '#9ca3af' } }
-                        }
+                            legend: { position: 'right', labels: { padding: 20, usePointStyle: true } }
+                        },
+                        cutout: '60%'
                     }
                 });
             }
@@ -730,21 +820,28 @@ contract MyGaslessApp is ERC2771Context {
                     tbody.innerHTML = data.data.activity.map(tx => {
                         const chain = CHAINS[tx.chainId] || { name: 'Unknown', explorer: '#' };
                         return \`
-                            <tr class="hover:bg-gray-700/50">
-                                <td class="px-6 py-4 font-mono text-sm text-purple-400">\${tx.id.slice(0, 12)}...</td>
-                                <td class="px-6 py-4 font-mono text-sm">\${tx.user}</td>
-                                <td class="px-6 py-4">\${chain.name}</td>
-                                <td class="px-6 py-4 font-mono text-sm">\${tx.to}</td>
+                            <tr class="table-row-hover transition-colors">
+                                <td class="px-6 py-4 font-mono text-sm text-purple-600">\${tx.id.slice(0, 12)}...</td>
+                                <td class="px-6 py-4 font-mono text-sm text-gray-600">\${tx.user}</td>
                                 <td class="px-6 py-4">
-                                    <span class="status-\${tx.status} font-semibold capitalize">\${tx.status}</span>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 text-gray-700">
+                                        \${chain.name}
+                                    </span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-400">\${formatTime(tx.createdAt)}</td>
+                                <td class="px-6 py-4 font-mono text-sm text-gray-600">\${tx.to}</td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold capitalize status-\${tx.status}">
+                                        <span class="w-1.5 h-1.5 rounded-full mr-1.5 bg-current"></span>
+                                        \${tx.status}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-500">\${formatTime(tx.createdAt)}</td>
                             </tr>
                         \`;
                     }).join('');
                 } else {
                     document.getElementById('activity-table').innerHTML = 
-                        '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No transactions yet</td></tr>';
+                        '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-400"><i class="fas fa-inbox text-3xl mb-2"></i><p>No transactions yet</p></td></tr>';
                 }
             } catch (error) {
                 console.error('Failed to load activity:', error);
@@ -755,7 +852,7 @@ contract MyGaslessApp is ERC2771Context {
         async function loadHistory() {
             if (!userAddress) {
                 document.getElementById('history-table').innerHTML = 
-                    '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">Connect wallet to view history</td></tr>';
+                    '<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400"><i class="fas fa-wallet text-3xl mb-2"></i><p>Connect wallet to view history</p></td></tr>';
                 return;
             }
             
@@ -768,25 +865,32 @@ contract MyGaslessApp is ERC2771Context {
                     tbody.innerHTML = data.data.transactions.map(tx => {
                         const chain = CHAINS[tx.chain_id] || { name: 'Unknown', explorer: '#' };
                         const txLink = tx.tx_hash ? 
-                            \`<a href="\${chain.explorer}/tx/\${tx.tx_hash}" target="_blank" class="text-purple-400 hover:underline">\${tx.tx_hash.slice(0, 10)}...</a>\` : 
-                            '-';
+                            \`<a href="\${chain.explorer}/tx/\${tx.tx_hash}" target="_blank" class="text-purple-600 hover:text-purple-700 hover:underline font-mono">\${tx.tx_hash.slice(0, 10)}...</a>\` : 
+                            '<span class="text-gray-400">-</span>';
                         return \`
-                            <tr class="hover:bg-gray-700/50">
-                                <td class="px-6 py-4 font-mono text-sm text-purple-400">\${tx.id.slice(0, 12)}...</td>
-                                <td class="px-6 py-4">\${chain.name}</td>
-                                <td class="px-6 py-4 font-mono text-sm">\${tx.to_address.slice(0, 8)}...</td>
-                                <td class="px-6 py-4">\${tx.gas_used || '-'}</td>
+                            <tr class="table-row-hover transition-colors">
+                                <td class="px-6 py-4 font-mono text-sm text-purple-600">\${tx.id.slice(0, 12)}...</td>
                                 <td class="px-6 py-4">
-                                    <span class="status-\${tx.status} font-semibold capitalize">\${tx.status}</span>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 text-gray-700">
+                                        \${chain.name}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 font-mono text-sm text-gray-600">\${tx.to_address.slice(0, 8)}...</td>
+                                <td class="px-6 py-4 text-gray-600">\${tx.gas_used || '-'}</td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold capitalize status-\${tx.status}">
+                                        <span class="w-1.5 h-1.5 rounded-full mr-1.5 bg-current"></span>
+                                        \${tx.status}
+                                    </span>
                                 </td>
                                 <td class="px-6 py-4">\${txLink}</td>
-                                <td class="px-6 py-4 text-sm text-gray-400">\${formatTime(tx.created_at)}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">\${formatTime(tx.created_at)}</td>
                             </tr>
                         \`;
                     }).join('');
                 } else {
                     document.getElementById('history-table').innerHTML = 
-                        '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">No transactions found</td></tr>';
+                        '<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400"><i class="fas fa-inbox text-3xl mb-2"></i><p>No transactions found</p></td></tr>';
                 }
             } catch (error) {
                 console.error('Failed to load history:', error);
@@ -926,11 +1030,11 @@ contract MyGaslessApp is ERC2771Context {
             resultEl.querySelector('pre').textContent = JSON.stringify(result, null, 2);
             
             if (result.success) {
-                resultEl.classList.remove('bg-red-900/30');
-                resultEl.classList.add('bg-green-900/30');
+                resultEl.classList.remove('bg-red-50', 'border-red-200');
+                resultEl.classList.add('bg-emerald-50', 'border-emerald-200');
             } else {
-                resultEl.classList.remove('bg-green-900/30');
-                resultEl.classList.add('bg-red-900/30');
+                resultEl.classList.remove('bg-emerald-50', 'border-emerald-200');
+                resultEl.classList.add('bg-red-50', 'border-red-200');
             }
         }
 
@@ -943,8 +1047,19 @@ contract MyGaslessApp is ERC2771Context {
         }
 
         function formatTime(timestamp) {
+            if (!timestamp) return '-';
             const date = new Date(timestamp);
-            return date.toLocaleString();
+            const now = new Date();
+            const diff = now - date;
+            
+            // Less than 1 minute
+            if (diff < 60000) return 'Just now';
+            // Less than 1 hour
+            if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+            // Less than 24 hours
+            if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+            // Show date
+            return date.toLocaleDateString();
         }
 
         // Chain selection change
@@ -971,8 +1086,8 @@ contract MyGaslessApp is ERC2771Context {
                         '<i class="fas fa-check-circle mr-2"></i>' + 
                         userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
                     document.getElementById('wallet-btn').classList.remove('bg-white', 'text-purple-600');
-                    document.getElementById('wallet-btn').classList.add('bg-green-500', 'text-white');
-                    document.getElementById('user-address').textContent = userAddress;
+                    document.getElementById('wallet-btn').classList.add('bg-emerald-500', 'text-white');
+                    document.getElementById('user-address').textContent = userAddress.slice(0, 8) + '...' + userAddress.slice(-6);
                     loadUserNonce();
                 }
             });

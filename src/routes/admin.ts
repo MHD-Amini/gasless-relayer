@@ -250,7 +250,7 @@ admin.get('/health', async (c) => {
         status: cb.is_open === 1 ? 'degraded' : 'healthy',
         database: 'connected',
         circuitBreaker: cb.is_open === 1 ? 'open' : 'closed',
-        uptime: process.uptime?.() || 'N/A'
+        timestamp: Date.now()
       },
       timestamp: Date.now()
     });
