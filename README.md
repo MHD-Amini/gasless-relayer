@@ -13,7 +13,6 @@
 
 Enable gasless transactions for your dApp users. Built with Hono and deployed on Cloudflare's edge network for ultra-low latency worldwide.
 
-[Live Demo](#-live-demo) | [API Docs](#-api-endpoints) | [Quick Start](#-quick-start) | [Architecture](#-architecture)
 
 </div>
 
